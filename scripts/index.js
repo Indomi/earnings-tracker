@@ -128,6 +128,28 @@ async function main() {
         require('./data-source');
         break;
 
+      case 'scan':
+      case 'sector-scan':
+        // 板块扫描
+        const scanArgs = args.slice(1);
+        process.argv = ['node', 'sector.js', 'scan', ...scanArgs];
+        require('./sector');
+        break;
+
+      case 'sectors':
+        // 列出可用板块
+        process.argv = ['node', 'sector.js', 'list', args[1]];
+        require('./sector');
+        break;
+
+      case 'watchlist':
+      case 'wl':
+        // 关注列表管理
+        const wlArgs = args.slice(1);
+        process.argv = ['node', 'watchlist.js', ...wlArgs];
+        require('./watchlist');
+        break;
+
       case 'demo':
         const { runDemo } = require('./demo');
         await runDemo();
@@ -136,45 +158,49 @@ async function main() {
       case 'help':
       default:
         console.log(`
-🦞 AI Earnings Tracker - 财报追踪器 v2.1
-支持：美股 🇺🇸 | 港股 🇭🇰 | A股 🇨🇳 | 多数据源配置
+🦞 AI Earnings Tracker - 财报追踪器 v2.2
+支持：美股 🇺🇸 | 港股 🇭🇰 | A股 🇨🇳 | 多数据源 | 板块扫描
 
-使用方法:
-  node index.js <command> [options]
+📊 财报查询:
+  preview [market] [sector]      获取下周财报预览
+  markets                        列出支持的股市
+  sectors [market]               列出行业板块
+  query, company <symbol>        查询特定公司
+  summary, report <symbol>       生成财报摘要
 
-财报查询:
-  preview [market] [sector]  获取下周财报预览
-  markets                    列出支持的股市
-  sectors [market]           列出行业板块
-  sector <sector-id>         按板块查询财报
-  query, company <symbol>    查询特定公司
-  summary, report <symbol>   生成财报摘要
+🔍 板块扫描 (新功能):
+  scan <sector> [market] [topN]  扫描板块龙头企业并推荐
+  sectors                        列出可扫描的板块
 
-数据源管理:
-  data-source list           列出可用数据源
-  data-source switch <id>    切换数据源
-  data-source test           测试当前数据源
-  data-source current        显示当前数据源
+📋 关注列表:
+  watchlist list                 查看关注列表
+  watchlist add <symbol> <mkt>   添加股票到关注列表
+  watchlist remove <symbol> <mkt> 从关注列表移除
 
-其他:
-  demo                       运行演示
-  help                       显示帮助
+⚙️ 数据源管理:
+  data-source list               列出可用数据源
+  data-source switch <id>        切换数据源
+  data-source test               测试当前数据源
 
-示例:
-  node index.js preview                    # 所有市场
-  node index.js preview us                 # 仅美股
-  node index.js preview hk tech            # 港股科技板块
-  node index.js query NVDA                 # 查询NVDA
-  node index.js summary NVDA               # NVDA财报摘要
-  node index.js data-source switch fmp     # 切换到FMP数据源
+🔧 其他:
+  demo                           运行演示
+  help                           显示帮助
 
-数据源配置:
-  编辑 .config/watchlist.json 配置 API Key
-  或使用: node index.js data-source switch <provider>
+💡 快速开始:
+  # 扫描美股科技板块前50家龙头企业
+  node index.js scan tech us 50
+
+  # 查看推荐结果
+  node index.js scan tech
+
+  # 查询特定股票
+  node index.js query NVDA
+
+  # 管理关注列表
+  node index.js watchlist add INTC us "英特尔" tech 芯片
 
 板块ID: tech(科技), finance(金融), healthcare(医疗健康),
-        consumer(消费), energy(能源), industrial(工业),
-        property(地产), manufacturing(制造), materials(材料)
+        consumer(消费), energy(能源), industrial(工业)
         `);
     }
   } catch (error) {
@@ -201,3 +227,23 @@ if (require.main === module) {
 }
 
 module.exports = { main };
+
+// 添加到 switch case 中
+      case 'sector-scan':
+      case 'scan':
+        const scanArgs = args.slice(1);
+        process.argv = ['node', 'sector.js', 'scan', ...scanArgs];
+        require('./sector');
+        break;
+
+      case 'sectors':
+        process.argv = ['node', 'sector.js', 'list', args[1]];
+        require('./sector');
+        break;
+
+      case 'watchlist':
+      case 'wl':
+        const wlArgs = args.slice(1);
+        process.argv = ['node', 'watchlist.js', ...wlArgs];
+        require('./watchlist');
+        break;
