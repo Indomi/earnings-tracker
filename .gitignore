@@ -11,6 +11,12 @@ yarn.lock
 .env.local
 .env.*.local
 
+# API Keys and Secrets
+*.key
+*.secret
+api-keys.json
+config.local.json
+
 # IDE
 .vscode/
 .idea/

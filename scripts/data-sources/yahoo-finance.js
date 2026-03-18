@@ -19,9 +19,10 @@ try {
 
 let yahooFinance;
 try {
-  yahooFinance = require('yahoo-finance2').default;
+  const YahooFinance = require('yahoo-finance2').default;
+  yahooFinance = new YahooFinance();
 } catch (e) {
-  console.warn('yahoo-finance2 未安装，请运行: npm install yahoo-finance2');
+  console.warn('yahoo-finance2 未安装或初始化失败，请运行: npm install yahoo-finance2');
 }
 
 /**
