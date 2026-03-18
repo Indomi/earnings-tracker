@@ -5,7 +5,7 @@
 
 const { execSync } = require('child_process');
 const path = require('path');
-const { getCompanyEarnings } = require('./data-source-factory');
+const { getCompanyEarnings, getCompanyInfo } = require('./data-source-factory');
 
 /**
  * 板块龙头企业映射（简化版，实际应从API获取）
@@ -100,23 +100,33 @@ async function scanSector(sectorId, market = 'us', topN = 50) {
   
   const results = [];
   
-  // 并行获取财报数据
+  // 并行获取实时行情数据
   for (const company of targets) {
     try {
       console.log(`  📈 获取 ${company.symbol} (${company.name})...`);
       
-      // 尝试获取真实数据
-      const earnings = await getCompanyEarnings(company.symbol, market);
+      // 优先获取实时行情（新浪财经支持）
+      const quote = await getCompanyInfo(company.symbol, market);
+      
+      // 尝试获取财报数据（可能失败，但不影响）
+      let earnings = null;
+      try {
+        earnings = await getCompanyEarnings(company.symbol, market);
+      } catch (e) {
+        // 忽略财报数据错误
+      }
       
       results.push({
         ...company,
+        quote: quote || null,
         earnings: earnings || null,
-        hasData: !!earnings
+        hasData: !!(quote || earnings)
       });
     } catch (e) {
       console.log(`  ⚠️ ${company.symbol} 数据获取失败`);
       results.push({
         ...company,
+        quote: null,
         earnings: null,
         hasData: false
       });
@@ -131,60 +141,105 @@ async function scanSector(sectorId, market = 'us', topN = 50) {
  */
 function analyzeAndRecommend(companies, sectorId, market) {
   console.log('\n📊 数据分析中...\n');
-  
-  // 过滤出有数据的公司
-  const withData = companies.filter(c => c.hasData && c.earnings);
-  
+
+  // 过滤出有数据的公司（实时行情或财报）
+  const withData = companies.filter(c => c.hasData && (c.quote || c.earnings));
+
   if (withData.length === 0) {
     return {
       success: false,
-      message: '暂无财报数据，请配置真实数据源',
+      message: '暂无数据，请检查数据源配置',
       companies: companies.map(c => c.symbol)
     };
   }
-  
-  // 简单评分逻辑（基于模拟数据）
+
+  // 评分逻辑（基于实时行情 + 财报数据）
   const scored = withData.map(c => {
     const e = c.earnings;
-    let score = 0;
+    const q = c.quote;
+    let score = 50; // 基础分50
     let reasons = [];
-    
+
+    // 有实时数据加分
+    if (q && q.price) {
+      score += 15;
+      reasons.push('数据正常');
+
+      // 计算涨跌幅
+      const prevClose = q.prevClose || q.close;
+      if (prevClose && q.price) {
+        const change = q.change !== undefined ? q.change : (q.price - prevClose);
+        const changePct = q.changePercent !== undefined ? q.changePercent : (change / prevClose * 100);
+        const changeStr = changePct.toFixed(2);
+
+        // 上涨但不过度
+        if (change > 0 && change < 5) {
+          score += 10;
+          reasons.push(`上涨 ${changeStr}%`);
+        } else if (change >= 5 && change < 10) {
+          score += 15;
+          reasons.push(`强势上涨 ${changeStr}%`);
+        } else if (change >= 10) {
+          score += 20;
+          reasons.push(`大涨 ${changeStr}% 🔥`);
+        } else if (change > -3 && change <= 0) {
+          score += 5;
+          reasons.push(`微跌 ${changeStr}%`);
+        } else if (change <= -3) {
+          score -= 5;
+          reasons.push(`回调 ${changeStr}%`);
+        }
+      }
+
+      // 成交量活跃（简单判断：有成交量数据）
+      if (q.volume && q.volume > 0) {
+        score += 5;
+        reasons.push('成交活跃');
+      }
+    }
+
     // EPS超预期加分
-    if (e.beatEPS) {
+    if (e && e.beatEPS) {
       score += 30;
       reasons.push('EPS超预期');
     }
-    
+
     // 营收超预期加分
-    if (e.beatRevenue) {
+    if (e && e.beatRevenue) {
       score += 20;
       reasons.push('营收超预期');
     }
-    
+
     // 正增长加分
-    if (e.yoyGrowth && parseFloat(e.yoyGrowth) > 0) {
+    if (e && e.yoyGrowth && parseFloat(e.yoyGrowth) > 0) {
       score += 20;
       reasons.push(`同比${e.yoyGrowth}增长`);
     }
-    
+
     // 盘后上涨加分
-    if (e.afterHoursMove && e.afterHoursMove.includes('+')) {
+    if (e && e.afterHoursMove && e.afterHoursMove.includes('+')) {
       score += 15;
       reasons.push('盘后上涨');
     }
-    
+
     // 大盘值加分（稳定性）
     const marketCap = parseMarketCap(c.marketCap);
     if (marketCap > 500) { // 500B+
       score += 15;
       reasons.push('大盘蓝筹');
+    } else if (marketCap > 100) { // 100B+
+      score += 10;
+      reasons.push('中大盘');
+    } else if (marketCap > 50) {
+      score += 5;
+      reasons.push('中大型');
     }
-    
+
     return {
       ...c,
       score,
       reasons,
-      recommendation: score >= 70 ? '强烈推荐' : score >= 50 ? '推荐' : score >= 30 ? '中性' : '谨慎'
+      recommendation: score >= 70 ? '强烈推荐' : score >= 55 ? '推荐' : score >= 40 ? '中性' : '谨慎'
     };
   });
   
@@ -235,23 +290,31 @@ function generateSectorReport(companies, sectorId, market) {
       lines.push(`${i + 1}. ${c.symbol} - ${c.name}`);
       lines.push(`   市值: ${c.marketCap} | 评分: ${c.score}`);
       lines.push(`   亮点: ${c.reasons.join('、')}`);
-      lines.push(`   EPS: ${c.earnings?.expectedEPS || 'N/A'} | 营收: ${c.earnings?.expectedRevenue || 'N/A'}`);
+      if (c.quote && c.quote.price) {
+        const change = c.quote.change !== undefined ? c.quote.change : (c.quote.price - (c.quote.prevClose || c.quote.close || c.quote.price));
+        const changePct = c.quote.changePercent !== undefined ? c.quote.changePercent : (change / (c.quote.prevClose || c.quote.close || c.quote.price) * 100);
+        const changeEmoji = change >= 0 ? '🟢' : '🔴';
+        lines.push(`   当前价: $${c.quote.price} ${changeEmoji} ${change >= 0 ? '+' : ''}${change.toFixed(2)} (${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%)`);
+      }
       lines.push('');
     });
   } else {
     lines.push('暂无强烈推荐标的\n');
   }
-  
+
   // 推荐
   if (buy.length > 0) {
     lines.push('═'.repeat(60));
     lines.push('👍 推荐 (评分 50-69)');
     lines.push('═'.repeat(60));
     lines.push('');
-    
+
     buy.slice(0, 5).forEach((c, i) => {
       lines.push(`${i + 1}. ${c.symbol} - ${c.name} (评分: ${c.score})`);
       lines.push(`   理由: ${c.reasons.join('、')}`);
+      if (c.quote && c.quote.price) {
+        lines.push(`   当前价: $${c.quote.price}`);
+      }
       lines.push('');
     });
   }

@@ -90,19 +90,28 @@ function parseSinaData(data, symbol, market) {
       source: '新浪财经'
     };
   } else {
-    // 美股格式
+    // 美股格式（gb_前缀）
+    // 格式：名称,当前价,涨跌额,时间,涨跌额2,昨收,开盘价,最高价,最低价,52周高,52周低,成交量,...
+    const price = parseFloat(fields[1]);
+    const change = parseFloat(fields[2]);
+    const prevClose = parseFloat(fields[5]); // 昨收
+    const changePct = prevClose ? ((change / prevClose) * 100).toFixed(2) : '0.00';
+
     return {
       symbol: symbol,
       name: fields[0],
-      price: parseFloat(fields[1]),
-      change: parseFloat(fields[2]),
-      changePercent: parseFloat(fields[3]),
-      volume: parseInt(fields[6]),
+      price: price,
+      change: change,
+      changePercent: parseFloat(changePct),
+      prevClose: prevClose,
+      open: parseFloat(fields[6]),
       high: parseFloat(fields[7]),
       low: parseFloat(fields[8]),
-      open: parseFloat(fields[9]),
-      close: parseFloat(fields[10]),
-      date: fields[20] || new Date().toISOString().split('T')[0],
+      high52w: parseFloat(fields[9]),
+      low52w: parseFloat(fields[10]),
+      volume: parseInt(fields[11]),
+      date: fields[3] ? fields[3].split(' ')[0] : new Date().toISOString().split('T')[0],
+      time: fields[3] ? fields[3].split(' ')[1] : '',
       market: 'us',
       currency: 'USD',
       isRealData: true,
