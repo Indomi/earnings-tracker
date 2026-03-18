@@ -136,12 +136,6 @@ async function main() {
         require('./sector');
         break;
 
-      case 'sectors':
-        // 列出可用板块
-        process.argv = ['node', 'sector.js', 'list', args[1]];
-        require('./sector');
-        break;
-
       case 'watchlist':
       case 'wl':
         // 关注列表管理
@@ -227,23 +221,3 @@ if (require.main === module) {
 }
 
 module.exports = { main };
-
-// 添加到 switch case 中
-      case 'sector-scan':
-      case 'scan':
-        const scanArgs = args.slice(1);
-        process.argv = ['node', 'sector.js', 'scan', ...scanArgs];
-        require('./sector');
-        break;
-
-      case 'sectors':
-        process.argv = ['node', 'sector.js', 'list', args[1]];
-        require('./sector');
-        break;
-
-      case 'watchlist':
-      case 'wl':
-        const wlArgs = args.slice(1);
-        process.argv = ['node', 'watchlist.js', ...wlArgs];
-        require('./watchlist');
-        break;

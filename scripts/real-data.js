@@ -6,6 +6,14 @@
 const { execSync } = require('child_process');
 const path = require('path');
 
+// 加载新浪财经数据源（国内直接访问）
+let sinaDataSource;
+try {
+  sinaDataSource = require('./data-sources/sina');
+} catch (e) {
+  console.warn('新浪财经数据源加载失败:', e.message);
+}
+
 /**
  * 通过 Web Search 获取真实财报日历
  * @param {string} symbol - 股票代码（可选）
@@ -42,6 +50,31 @@ async function getRealEarningsCalendar(symbol = null, market = 'us') {
  * 获取特定公司的财报数据
  */
 async function getRealCompanyEarnings(symbol, market = 'us') {
+  // 优先使用新浪财经数据源（国内可用）
+  if (sinaDataSource) {
+    try {
+      console.log(`📡 尝试从新浪财经获取 ${symbol} 数据...`);
+      const sinaData = await sinaDataSource.getCompanyInfo(symbol, market);
+      if (sinaData) {
+        return {
+          symbol: sinaData.symbol,
+          name: sinaData.name,
+          price: sinaData.price,
+          market: sinaData.market,
+          latestEPS: 'N/A',
+          latestRevenue: 'N/A',
+          nextEarningsDate: sinaData.nextEarningsDate,
+          growth: 'N/A',
+          isRealData: true,
+          source: '新浪财经'
+        };
+      }
+    } catch (e) {
+      console.warn('新浪财经获取失败:', e.message);
+    }
+  }
+  
+  // 回退到 Web Search
   const queries = [
     `${symbol} Q4 2025 earnings EPS revenue ${getMarketSuffix(market)}`,
     `${symbol} latest earnings results beat miss ${getMarketSuffix(market)}`,
@@ -168,16 +201,16 @@ function getMarketSuffix(market) {
  * 获取真实财报数据（带缓存）
  */
 async function getRealEarningsData(symbol, market = 'us') {
-  console.log(`🔍 正在获取 ${symbol} 的真实财报数据...`);
+  console.log(`🔍 正在获取 ${symbol} 的真实数据...`);
   
   const data = await getRealCompanyEarnings(symbol, market);
   
-  if (!data || (!data.latestEPS && !data.nextEarningsDate)) {
-    console.log(`⚠️ 未找到 ${symbol} 的实时数据，返回模拟数据`);
+  if (!data || (!data.price && !data.latestEPS && !data.nextEarningsDate)) {
+    console.log(`⚠️ 未找到 ${symbol} 的实时数据`);
     return null;
   }
   
-  console.log(`✅ 成功获取 ${symbol} 的真实数据`);
+  console.log(`✅ 成功获取 ${symbol} 的${data.source || '真实'}数据`);
   return data;
 }
 

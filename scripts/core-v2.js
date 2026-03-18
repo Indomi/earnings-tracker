@@ -19,7 +19,7 @@ try {
 }
 
 // 是否使用真实数据模式
-const USE_REAL_DATA = process.env.USE_REAL_DATA === 'true';
+const USE_REAL_DATA = process.env.USE_REAL_DATA !== 'false'; // 默认启用真实数据
 
 /**
  * 获取下周财报预览（真实数据优先）
