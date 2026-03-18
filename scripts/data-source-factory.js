@@ -1,6 +1,6 @@
 /**
  * Data Source Factory - 统一数据源接口
- * 支持多种数据源：Mock, FMP, Alpha Vantage, Yahoo Finance, Polygon, Web Search
+ * 支持多种数据源：Mock, FMP, Alpha Vantage, Yahoo Finance, Polygon, Web Search, 新浪财经
  */
 
 const fs = require('fs');
@@ -26,8 +26,8 @@ function getActiveDataSource() {
   const options = dsConfig.options[provider];
   
   if (!options || !options.enabled) {
-    console.log(`⚠️ 数据源 ${provider} 未启用，回退到模拟数据`);
-    return { provider: 'mock', options: dsConfig.options.mock };
+    console.log(`⚠️ 数据源 ${provider} 未启用，回退到新浪财经`);
+    return { provider: 'sina', options: dsConfig.options.sina };
   }
   
   return { provider, options };
@@ -52,9 +52,11 @@ async function getEarningsCalendar(symbol = null, market = 'us') {
       return require('./data-sources/polygon').getEarningsCalendar(symbol, market);
     case 'webSearch':
       return require('./data-sources/web-search').getEarningsCalendar(symbol, market);
+    case 'sina':
+      return require('./data-sources/sina').getEarningsCalendar(symbol, market);
     default:
-      console.warn(`未知数据源: ${provider}，使用模拟数据`);
-      return require('./data-sources/mock').getEarningsCalendar(symbol, market);
+      console.warn(`未知数据源: ${provider}，使用新浪财经`);
+      return require('./data-sources/sina').getEarningsCalendar(symbol, market);
   }
 }
 
@@ -77,8 +79,10 @@ async function getCompanyEarnings(symbol, market = 'us') {
       return require('./data-sources/polygon').getCompanyEarnings(symbol, market);
     case 'webSearch':
       return require('./data-sources/web-search').getCompanyEarnings(symbol, market);
+    case 'sina':
+      return require('./data-sources/sina').getCompanyEarnings(symbol, market);
     default:
-      return require('./data-sources/mock').getCompanyEarnings(symbol, market);
+      return require('./data-sources/sina').getCompanyEarnings(symbol, market);
   }
 }
 
@@ -101,8 +105,10 @@ async function getCompanyInfo(symbol, market = 'us') {
       return require('./data-sources/polygon').getCompanyInfo(symbol, market);
     case 'webSearch':
       return require('./data-sources/web-search').getCompanyInfo(symbol, market);
+    case 'sina':
+      return require('./data-sources/sina').getCompanyInfo(symbol, market);
     default:
-      return require('./data-sources/mock').getCompanyInfo(symbol, market);
+      return require('./data-sources/sina').getCompanyInfo(symbol, market);
   }
 }
 
@@ -163,8 +169,8 @@ async function testDataSource() {
   console.log(`🔍 测试数据源: ${provider}`);
   
   try {
-    // 使用 NVDA 作为测试
-    const result = await getCompanyInfo('NVDA', 'us');
+    // 使用茅台作为测试（A股）
+    const result = await getCompanyInfo('600519', 'cn');
     
     if (result && (result.symbol || result.name)) {
       return {

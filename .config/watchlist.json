@@ -437,7 +437,7 @@
     }
   },
   "dataSource": {
-    "provider": "yahooFinance",
+    "provider": "sina",
     "options": {
       "mock": {
         "enabled": true,
@@ -480,6 +480,13 @@
         "description": "Web Search - 通过搜索引擎获取（备选）",
         "note": "不需要API Key，但数据准确性较低",
         "fallback": true
+      },
+      "sina": {
+        "enabled": true,
+        "description": "新浪财经 - 国内免费实时行情（无需代理）",
+        "note": "支持A股/港股/美股实时行情，无需API Key，国内直接访问",
+        "docs": "https://finance.sina.com.cn",
+        "freeTier": "无限制"
       }
     }
   },
