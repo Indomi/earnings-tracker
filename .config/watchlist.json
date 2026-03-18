@@ -85,6 +85,53 @@
       ]
     }
   },
+  "dataSource": {
+    "provider": "mock",
+    "options": {
+      "mock": {
+        "enabled": true,
+        "description": "模拟数据（无需配置，用于演示）"
+      },
+      "financialModelingPrep": {
+        "enabled": false,
+        "description": "Financial Modeling Prep - 专业金融数据",
+        "apiKey": "YOUR_FMP_API_KEY_HERE",
+        "baseUrl": "https://financialmodelingprep.com/api/v3",
+        "docs": "https://site.financialmodelingprep.com/developer/docs",
+        "freeTier": "250 calls/day"
+      },
+      "alphaVantage": {
+        "enabled": false,
+        "description": "Alpha Vantage - 股票和财报数据",
+        "apiKey": "YOUR_ALPHA_VANTAGE_API_KEY_HERE",
+        "baseUrl": "https://www.alphavantage.co/query",
+        "docs": "https://www.alphavantage.co/documentation/",
+        "freeTier": "5 calls/minute, 500/day"
+      },
+      "yahooFinance": {
+        "enabled": false,
+        "description": "Yahoo Finance - 免费非官方API",
+        "note": "使用 yahoo-finance2 库，无需API Key",
+        "install": "npm install yahoo-finance2",
+        "docs": "https://github.com/gadicc/node-yahoo-finance2",
+        "freeTier": "无限制（但非官方，可能不稳定）"
+      },
+      "polygon": {
+        "enabled": false,
+        "description": "Polygon.io - 实时市场数据",
+        "apiKey": "YOUR_POLYGON_API_KEY_HERE",
+        "baseUrl": "https://api.polygon.io/v2",
+        "docs": "https://polygon.io/docs/stocks",
+        "freeTier": "5 calls/minute"
+      },
+      "webSearch": {
+        "enabled": false,
+        "description": "Web Search - 通过搜索引擎获取（备选）",
+        "note": "不需要API Key，但数据准确性较低",
+        "fallback": true
+      }
+    }
+  },
   "schedule": {
     "preview_day": "sunday",
     "preview_time": "20:00",
