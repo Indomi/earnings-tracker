@@ -1,0 +1,96 @@
+{
+  "markets": {
+    "us": {
+      "name": "美股",
+      "timezone": "US/Eastern",
+      "currency": "USD",
+      "sectors": [
+        { "id": "tech", "name": "科技", "keywords": ["AI", "芯片", "软件", "互联网"] },
+        { "id": "finance", "name": "金融", "keywords": ["银行", "保险", "证券", "支付"] },
+        { "id": "healthcare", "name": "医疗健康", "keywords": ["制药", "生物科技", "医疗器械"] },
+        { "id": "consumer", "name": "消费", "keywords": ["电商", "零售", "餐饮", "奢侈品"] },
+        { "id": "energy", "name": "能源", "keywords": ["石油", "天然气", "新能源"] },
+        { "id": "industrial", "name": "工业", "keywords": ["制造", "航空", "物流"] }
+      ],
+      "companies": [
+        { "symbol": "NVDA", "name": "英伟达", "sector": "tech", "industry": "AI芯片" },
+        { "symbol": "MSFT", "name": "微软", "sector": "tech", "industry": "云计算/AI" },
+        { "symbol": "GOOGL", "name": "谷歌", "sector": "tech", "industry": "搜索/AI" },
+        { "symbol": "META", "name": "Meta", "sector": "tech", "industry": "社交/AI" },
+        { "symbol": "AMZN", "name": "亚马逊", "sector": "tech", "industry": "电商/云" },
+        { "symbol": "TSLA", "name": "特斯拉", "sector": "consumer", "industry": "电动车/AI" },
+        { "symbol": "AMD", "name": "AMD", "sector": "tech", "industry": "芯片" },
+        { "symbol": "AAPL", "name": "苹果", "sector": "tech", "industry": "消费电子" },
+        { "symbol": "CRM", "name": "Salesforce", "sector": "tech", "industry": "SaaS/AI" },
+        { "symbol": "ORCL", "name": "甲骨文", "sector": "tech", "industry": "数据库/云" },
+        { "symbol": "JPM", "name": "摩根大通", "sector": "finance", "industry": "银行" },
+        { "symbol": "JNJ", "name": "强生", "sector": "healthcare", "industry": "制药" },
+        { "symbol": "XOM", "name": "埃克森美孚", "sector": "energy", "industry": "石油" },
+        { "symbol": "WMT", "name": "沃尔玛", "sector": "consumer", "industry": "零售" }
+      ]
+    },
+    "hk": {
+      "name": "港股",
+      "timezone": "Asia/Hong_Kong",
+      "currency": "HKD",
+      "sectors": [
+        { "id": "tech", "name": "科技", "keywords": ["互联网", "软件", "电子"] },
+        { "id": "finance", "name": "金融", "keywords": ["银行", "保险", "证券"] },
+        { "id": "property", "name": "地产", "keywords": ["房地产", "物业", "建筑"] },
+        { "id": "consumer", "name": "消费", "keywords": ["零售", "餐饮", "汽车"] },
+        { "id": "healthcare", "name": "医疗健康", "keywords": ["制药", "生物科技"] },
+        { "id": "energy", "name": "能源", "keywords": ["石油", "电力", "新能源"] }
+      ],
+      "companies": [
+        { "symbol": "00700.HK", "name": "腾讯控股", "sector": "tech", "industry": "互联网" },
+        { "symbol": "09988.HK", "name": "阿里巴巴", "sector": "tech", "industry": "电商/云" },
+        { "symbol": "03690.HK", "name": "美团", "sector": "tech", "industry": "本地生活" },
+        { "symbol": "01810.HK", "name": "小米集团", "sector": "tech", "industry": "消费电子" },
+        { "symbol": "01299.HK", "name": "友邦保险", "sector": "finance", "industry": "保险" },
+        { "symbol": "02318.HK", "name": "中国平安", "sector": "finance", "industry": "保险/银行" },
+        { "symbol": "03988.HK", "name": "中国银行", "sector": "finance", "industry": "银行" },
+        { "symbol": "01128.HK", "name": "恒生银行", "sector": "finance", "industry": "银行" },
+        { "symbol": "06060.HK", "name": "众安在线", "sector": "finance", "industry": "互联网保险" },
+        { "symbol": "02015.HK", "name": "理想汽车", "sector": "consumer", "industry": "新能源车" },
+        { "symbol": "09888.HK", "name": "百度集团", "sector": "tech", "industry": "搜索/AI" },
+        { "symbol": "09618.HK", "name": "京东集团", "sector": "tech", "industry": "电商/物流" }
+      ]
+    },
+    "cn": {
+      "name": "A股",
+      "timezone": "Asia/Shanghai",
+      "currency": "CNY",
+      "sectors": [
+        { "id": "tech", "name": "科技", "keywords": ["半导体", "软件", "通信", "电子"] },
+        { "id": "finance", "name": "金融", "keywords": ["银行", "保险", "证券", "信托"] },
+        { "id": "manufacturing", "name": "制造", "keywords": ["机械", "汽车", "军工", "船舶"] },
+        { "id": "consumer", "name": "消费", "keywords": ["白酒", "家电", "食品", "医药零售"] },
+        { "id": "healthcare", "name": "医药", "keywords": ["制药", "医疗器械", "CXO", "中药"] },
+        { "id": "energy", "name": "能源", "keywords": ["电力", "石油", "煤炭", "新能源"] },
+        { "id": "materials", "name": "材料", "keywords": ["有色", "钢铁", "化工", "建材"] }
+      ],
+      "companies": [
+        { "symbol": "600519", "name": "贵州茅台", "sector": "consumer", "industry": "白酒" },
+        { "symbol": "000858", "name": "五粮液", "sector": "consumer", "industry": "白酒" },
+        { "symbol": "002594", "name": "比亚迪", "sector": "manufacturing", "industry": "新能源车" },
+        { "symbol": "601012", "name": "隆基绿能", "sector": "energy", "industry": "光伏" },
+        { "symbol": "300750", "name": "宁德时代", "sector": "energy", "industry": "动力电池" },
+        { "symbol": "600036", "name": "招商银行", "sector": "finance", "industry": "银行" },
+        { "symbol": "601318", "name": "中国平安", "sector": "finance", "industry": "保险" },
+        { "symbol": "603259", "name": "药明康德", "sector": "healthcare", "industry": "CXO" },
+        { "symbol": "000333", "name": "美的集团", "sector": "consumer", "industry": "家电" },
+        { "symbol": "600276", "name": "恒瑞医药", "sector": "healthcare", "industry": "制药" },
+        { "symbol": "002415", "name": "海康威视", "sector": "tech", "industry": "安防/AI" },
+        { "symbol": "600887", "name": "伊利股份", "sector": "consumer", "industry": "乳制品" }
+      ]
+    }
+  },
+  "schedule": {
+    "preview_day": "sunday",
+    "preview_time": "20:00",
+    "check_after_minutes": 60
+  },
+  "notification": {
+    "channel": "feishu"
+  }
+}

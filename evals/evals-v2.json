@@ -1,0 +1,66 @@
+{
+  "skill_name": "earnings-tracker",
+  "version": "2.0",
+  "evals": [
+    {
+      "id": 1,
+      "name": "list-markets",
+      "prompt": "有哪些股市？",
+      "expected_output": "返回美股、港股、A股三个市场，包含各自的时区和货币信息，使用国旗emoji标识"
+    },
+    {
+      "id": 2,
+      "name": "list-sectors",
+      "prompt": "美股有哪些板块？",
+      "expected_output": "返回美股行业板块列表，包含科技、金融、医疗健康、消费、能源、工业等，每个板块有关键词和公司数量"
+    },
+    {
+      "id": 3,
+      "name": "weekly-preview-all",
+      "prompt": "获取下周财报日历",
+      "expected_output": "返回下周所有市场的财报安排，使用国旗emoji区分市场(🇺🇸🇭🇰🇨🇳)，包含公司名、代码、时间、预期数据"
+    },
+    {
+      "id": 4,
+      "name": "weekly-preview-by-market",
+      "prompt": "下周美股有哪些财报？",
+      "expected_output": "仅显示美股公司的财报安排，过滤掉港股和A股"
+    },
+    {
+      "id": 5,
+      "name": "weekly-preview-by-sector",
+      "prompt": "科技板块下周有哪些财报？",
+      "expected_output": "仅显示科技板块公司的财报，跨市场显示（美股+港股+A股的科技公司）"
+    },
+    {
+      "id": 6,
+      "name": "query-us-stock",
+      "prompt": "NVDA什么时候发财报？",
+      "expected_output": "识别NVDA为美股英伟达，返回财报日期、时间、预期EPS和营收，使用🇺🇸标识"
+    },
+    {
+      "id": 7,
+      "name": "query-hk-stock",
+      "prompt": "腾讯什么时候发财报？",
+      "expected_output": "识别腾讯为港股00700.HK，返回财报信息，使用🇭🇰标识，货币为HKD"
+    },
+    {
+      "id": 8,
+      "name": "query-cn-stock",
+      "prompt": "茅台财报时间？",
+      "expected_output": "识别茅台为A股600519，返回财报信息，使用🇨🇳标识，货币为CNY"
+    },
+    {
+      "id": 9,
+      "name": "earnings-summary",
+      "prompt": "生成一份英伟达最新财报的摘要",
+      "expected_output": "返回结构化财报摘要，包含核心指标（对比预期）、同比增速、关键亮点、下季度指引、市场反应，使用emoji分区"
+    },
+    {
+      "id": 10,
+      "name": "cross-market-sector",
+      "prompt": "金融板块覆盖哪些市场？",
+      "expected_output": "显示金融板块在三大市场的覆盖情况，列出各市场的金融公司"
+    }
+  ]
+}

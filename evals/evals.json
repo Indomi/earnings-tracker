@@ -1,0 +1,33 @@
+{
+  "skill_name": "earnings-tracker",
+  "evals": [
+    {
+      "id": 1,
+      "name": "weekly-preview",
+      "prompt": "获取下周科技公司财报日历",
+      "expected_output": "返回下周（周一至周五）的科技公司财报列表，包含公司名称、股票代码、财报时间（盘前/盘后）、预期EPS和营收。格式清晰，有emoji标识。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "specific-company-query",
+      "prompt": "NVDA什么时候发财报？",
+      "expected_output": "返回英伟达(NVDA)的下次财报日期、时间（盘前/盘后）、预期数据和重要关注点。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "earnings-summary-format",
+      "prompt": "生成一份英伟达最新财报的摘要",
+      "expected_output": "返回结构化的财报摘要，包含：发布时间、核心指标（EPS、营收vs预期）、同比增速、关键业务亮点、下季度指引、市场反应。使用emoji和清晰的格式。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "multiple-companies-filter",
+      "prompt": "下周有哪些关注的科技公司发财报？",
+      "expected_output": "从预设的关注列表（NVDA、MSFT、GOOGL、META等）中筛选出下周有财报的公司，并按日期排序。",
+      "files": []
+    }
+  ]
+}
